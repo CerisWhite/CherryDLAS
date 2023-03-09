@@ -1,0 +1,10 @@
+{
+    "ssl": false,
+    "key": "./cert/privkey.pem",
+    "cert": "./cert/cert.pem",
+    "ca": "./cert/chain.pem",
+    "port": 80,
+    "assetpaths": [
+        "C:\\Users\\Ceris\\Documents\\CODE\\CherryDLAS"
+    ]
+}
