@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
 const sslcom = require('https');
 let http = require('http');
 
@@ -134,7 +133,7 @@ async function OrchisHeartbeat() {
 				if (!fs.existsSync(path.join(BasePath, VersionData['Android_FileList'][entry].slice(0, 2)))) { 
 					fs.mkdirSync(path.join(BasePath, VersionData['Android_FileList'][entry].slice(0, 2))); 
 				}
-				const AssetURL = OrchisAssetURL + "/assetbundles/iOS/" + VersionData['Android_FileList'][entry].slice(0, 2) + "/" + VersionData['Android_FileList'][entry];
+				const AssetURL = OrchisAssetURL + "/assetbundles/Android/" + VersionData['Android_FileList'][entry].slice(0, 2) + "/" + VersionData['Android_FileList'][entry];
 				DownloadAsset(AssetURL, FilePath);
 			}
 		}
