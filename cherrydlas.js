@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const process = require('process');
 const sslcom = require('https');
 let http = require('http');
 
 const OrchisAssetURL = "https://orchis.cherrymint.live/dl"
-const BasePath = path.join(__dirname, "orchis");
+const BasePath = path.join(process.cwd(), "orchis");
 if (!fs.existsSync(BasePath)) {
 	fs.mkdirSync(BasePath);
 }
@@ -13,7 +14,7 @@ let ActiveDownloads = 0;
 let Configuration = {};
 let CertConf = {};
 let ServerPort = 80;
-let AssetPaths = [ __dirname, BasePath ];
+let AssetPaths = [ process.cwd(), BasePath ];
 if (fs.existsSync('./config.json')) {
 	Configuration = JSON.parse(fs.readFileSync('./config.json'));
 	if (Configuration['ssl'] === true) {
@@ -41,7 +42,7 @@ else {
 		"ca": "./cert/chain.pem",
 		"port": 80,
 		"assetpaths": [
-			__dirname
+			process.cwd()
 		]
 	}, null, 4));
 }
