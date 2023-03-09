@@ -1,4 +1,5 @@
 # CherryDLAS
+Cherry-Dragalia Lost Asset Server
 
 A NodeJS fileserver made for use with Orchis.
 
