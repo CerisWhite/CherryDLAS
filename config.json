@@ -3,7 +3,7 @@
     "key": "./cert/privkey.pem",
     "cert": "./cert/cert.pem",
     "ca": "./cert/chain.pem",
-    "port": 80,
+    "port": 3000,
     "assetpaths": [
         "C:\\Users\\Ceris\\Documents\\CODE\\CherryDLAS"
     ]
