@@ -13,7 +13,7 @@ let ActiveDownloads = 0;
 
 let Configuration = {};
 let CertConf = {};
-let ServerPort = 80;
+let ServerPort = 3000;
 let AssetPaths = [ process.cwd(), BasePath ];
 if (fs.existsSync('./config.json')) {
 	Configuration = JSON.parse(fs.readFileSync('./config.json'));
@@ -38,7 +38,7 @@ else {
 		"ssl": false,
 		"key": "./cert/privkey.pem",
 		"cert": "./cert/cert.pem",
-		"port": 80,
+		"port": 3000,
 		"assetpaths": [
 			process.cwd()
 		]
