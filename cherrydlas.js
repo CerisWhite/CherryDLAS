@@ -28,7 +28,7 @@ if (fs.existsSync('./config.json')) {
 	else { ServerPort = Configuration['port']; }
 	if (Configuration['assetpaths'] !== undefined) {
 		AssetPaths = Configuration['assetpaths'];
-		AssetPaths.push(BasePath);
+		AssetPaths.unshift(BasePath);
 	}
 }
 
