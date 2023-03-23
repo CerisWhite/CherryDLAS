@@ -9,6 +9,7 @@ const BasePath = path.join(process.cwd(), "orchis");
 if (!fs.existsSync(BasePath)) {
 	fs.mkdirSync(BasePath);
 }
+
 let ActiveDownloads = 0;
 
 let Configuration = {};
@@ -31,8 +32,6 @@ if (fs.existsSync('./config.json')) {
 		AssetPaths.unshift(BasePath);
 	}
 }
-
-
 else {
 	fs.writeFileSync('./config.json', JSON.stringify({
 		"ssl": false,
@@ -51,14 +50,16 @@ http.createServer(CertConf, (req, res) => {
 	for (let i in AssetPaths) {
 		// "say 'no' to directory traversal attacks" - some guy i'm in a discord server with, probably
 		let FilePath = "";
-		if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
-		else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
-		if (!fs.existsSync(FilePath)) { continue; }
-		fs.readFile(FilePath, (err, data) => {
-			res.writeHead(200);
-			res.end(data);
-			return;
-		});
+		try {
+			if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
+			else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
+			if (!fs.existsSync(FilePath)) { continue; }
+			fs.readFile(FilePath, (err, data) => {
+				res.writeHead(200);
+				res.end(data);
+				return;
+			});
+		} catch { console.log("An error has occurred."); }
 	}
 }).listen(ServerPort);
 
@@ -77,16 +78,16 @@ async function OrchisAssetVer() {
 		});
 	});
 }
-async function DownloadManifest(ManifestHash, Platform) {
+async function DownloadOrchisManifest(ManifestHash) {
 	const ManifestPath = path.join(BasePath, ManifestHash);
-	const ManifestBaseURL = OrchisAssetURL + "/manifests/" + Platform + "/" + ManifestHash;
+	const ManifestBaseURL = OrchisAssetURL + "/manifests/universe/" + ManifestHash;
 	DownloadAsset(ManifestBaseURL + "/assetbundle.manifest", path.join(ManifestPath, "assetbundle.manifest"));
 	DownloadAsset(ManifestBaseURL + "/assetbundle.en_us.manifest", path.join(ManifestPath, "assetbundle.en_us.manifest"));
 	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_cn.manifest", path.join(ManifestPath, "assetbundle.zh_cn.manifest"));
 	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_tw.manifest", path.join(ManifestPath, "assetbundle.zh_tw.manifest"));
 }
 async function DownloadAsset(TargetURL, TargetPath) {
-	while (ActiveDownloads >= 4) { await new Promise(resolve => setTimeout(resolve, 18000)); }
+	while (ActiveDownloads >= 5) { await new Promise(resolve => setTimeout(resolve, 10000)); }
 	ActiveDownloads += 1;
 	return new Promise((resolve, reject) => {
 		console.log("Downloading " + TargetURL);
@@ -105,14 +106,15 @@ async function DownloadAsset(TargetURL, TargetPath) {
 }
 async function OrchisHeartbeat() {
 	while (true) {
+		while (ActiveDownloads >= 5) { await new Promise(resolve => setTimeout(resolve, 10000)); }
 		const VersionData = await OrchisAssetVer();
 		if (!fs.existsSync(path.join(BasePath, VersionData['iOS_Manifest']))) {
 			fs.mkdirSync(path.join(BasePath, VersionData['iOS_Manifest']));
-			await DownloadManifest(VersionData['iOS_Manifest'], "iOS");
+			await DownloadOrchisManifest(VersionData['iOS_Manifest']);
 		}
 		if (!fs.existsSync(path.join(BasePath, VersionData['Android_Manifest']))) {
 			fs.mkdirSync(path.join(BasePath, VersionData['Android_Manifest']));
-			await DownloadManifest(VersionData['Android_Manifest'], "Android");
+			await DownloadOrchisManifest(VersionData['Android_Manifest']);
 		}
 		for (let entry in VersionData['iOS_FileList']) {
 			const FilePath = path.join(BasePath, VersionData['iOS_FileList'][entry].slice(0, 2), VersionData['iOS_FileList'][entry]);
@@ -139,4 +141,24 @@ async function OrchisHeartbeat() {
 }
 
 console.log('Fileserver started.');
+if (!fs.existsSync(path.join(BasePath, "b1HyoeTFegeTexC0"))) {
+	const ManifestPath = path.join(BasePath, "b1HyoeTFegeTexC0");
+	const ManifestBaseURL = OrchisAssetURL + "/manifests/universe/b1HyoeTFegeTexC0";
+	fs.mkdirSync(ManifestPath);
+	DownloadAsset(ManifestBaseURL + "/assetbundle.manifest", path.join(ManifestPath, "assetbundle.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.en_us.manifest", path.join(ManifestPath, "assetbundle.en_us.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.en_eu.manifest", path.join(ManifestPath, "assetbundle.en_eu.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_cn.manifest", path.join(ManifestPath, "assetbundle.zh_cn.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_tw.manifest", path.join(ManifestPath, "assetbundle.zh_tw.manifest"));
+}
+if (!fs.existsSync(path.join(BasePath, "y2XM6giU6zz56wCm"))) {
+	const ManifestPath = path.join(BasePath, "y2XM6giU6zz56wCm");
+	const ManifestBaseURL = OrchisAssetURL + "/manifests/universe/y2XM6giU6zz56wCm";
+	fs.mkdirSync(ManifestPath);
+	DownloadAsset(ManifestBaseURL + "/assetbundle.manifest", path.join(ManifestPath, "assetbundle.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.en_us.manifest", path.join(ManifestPath, "assetbundle.en_us.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.en_eu.manifest", path.join(ManifestPath, "assetbundle.en_eu.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_cn.manifest", path.join(ManifestPath, "assetbundle.zh_cn.manifest"));
+	DownloadAsset(ManifestBaseURL + "/assetbundle.zh_tw.manifest", path.join(ManifestPath, "assetbundle.zh_tw.manifest"));
+}
 OrchisHeartbeat();
