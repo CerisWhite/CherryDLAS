@@ -47,19 +47,25 @@ else {
 http.createServer(CertConf, (req, res) => {
 	const URLPath = req.url.split("/");
 	if (URLPath.includes("..")) { res.writeHead(404); res.end('404: File not found'); return; }
-	for (let i in AssetPaths) {
-		// "say 'no' to directory traversal attacks" - some guy i'm in a discord server with, probably
-		let FilePath = "";
-		try {
-			if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
-			else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
-			if (!fs.existsSync(FilePath)) { continue; }
-			fs.readFile(FilePath, (err, data) => {
-				res.writeHead(200);
-				res.end(data);
-				return;
-			});
-		} catch { console.log("An error has occurred."); }
+	if (URLPath[1] == "test") {
+		console.log("Connected!");
+		res.end("<p>Connected!</p>");
+	}
+	else if (URLPath[1] == "dl") {
+		for (let i in AssetPaths) {
+			// "say 'no' to directory traversal attacks" - some guy i'm in a discord server with, probably
+			let FilePath = "";
+			try {
+				if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
+				else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
+				if (!fs.existsSync(FilePath)) { continue; }
+				fs.readFile(FilePath, (err, data) => {
+					res.writeHead(200);
+					res.end(data);
+					return;
+				});
+			} catch { console.log("An error has occurred."); }
+		}
 	}
 }).listen(ServerPort);
 
