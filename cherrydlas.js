@@ -64,10 +64,10 @@ http.createServer(CertConf, (req, res) => {
 				res.end(fs.readFileSync(FilePath));
 				return;
 			} catch { console.log("An error has occurred."); }
-			res.writeHead(404);
-			res.end("<p>File not found</p>");
-			return;
 		}
+		res.writeHead(404);
+		res.end("<p>File not found</p>");
+		return;
 	}
 }).listen(ServerPort);
 
