@@ -5,6 +5,7 @@
     "ca": "./cert/chain.pem",
     "port": 3000,
     "assetpaths": [
-        "C:\\Users\\Ceris\\Documents\\CODE\\CherryDLAS"
+        "C:\\Users\\Ceris\\Documents\\CODE\\CherryDLAS",
+        "/home/jay/Documents/Dragalia/Assets"
     ]
 }
