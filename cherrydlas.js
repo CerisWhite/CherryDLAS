@@ -53,21 +53,26 @@ http.createServer(CertConf, (req, res) => {
 		return;
 	}
 	else if (URLPath[1] == "dl") {
+		let Attempt = 1;
 		for (let i in AssetPaths) {
 			// "say 'no' to directory traversal attacks" - some guy i'm in a discord server with, probably
 			let FilePath = "";
 			try {
 				if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
 				else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
-				if (!fs.existsSync(FilePath)) { continue; }
+				
+				if (!fs.existsSync(FilePath) && Attempt >= AssetPaths.length) {
+					res.writeHead(404);
+					res.end("<p>File not found</p>");
+					return;
+				}
+				else if (!fs.existsSync(FilePath)) { Attempt += 1; continue; }
+				const File = fs.readFileSync(FilePath);
 				res.writeHead(200);
-				res.end(fs.readFileSync(FilePath));
+				res.end(File);
 				return;
 			} catch { console.log("An error has occurred."); }
 		}
-		res.writeHead(404);
-		res.end("<p>File not found</p>");
-		return;
 	}
 }).listen(ServerPort);
 
