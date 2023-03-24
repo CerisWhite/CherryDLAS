@@ -20,7 +20,6 @@ let AssetPaths = [ process.cwd(), BasePath ];
 if (fs.existsSync('./config.json')) {
 	Configuration = JSON.parse(fs.readFileSync('./config.json'));
 	if (Configuration['ssl'] === true) {
-		http = require('https'); 
 		CertConf = {
 			key: fs.readFileSync(Configuration['key']),
 			cert: fs.readFileSync(Configuration['cert']),
