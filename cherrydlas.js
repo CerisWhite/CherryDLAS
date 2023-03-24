@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
-const sslcom = require('https');
-let http = require('http');
+import fs from 'fs'
+import path from 'path'
+import process from 'process'
+import https from 'https'
+import http from 'http'
+import { readFile } from 'fs/promises'
 
 const OrchisAssetURL = "https://orchis.cherrymint.live/dl"
 const BasePath = path.join(process.cwd(), "orchis");
@@ -44,12 +45,13 @@ else {
 	}, null, 4));
 }
 
-http.createServer(CertConf, (req, res) => {
+(Configuration['ssl'] ? https : http).createServer(CertConf, async (req, res) => {
 	const URLPath = req.url.split("/");
 	if (URLPath.includes("..")) { res.writeHead(404); res.end('404: File not found'); return; }
 	if (URLPath[1] == "test") {
 		console.log("Connected!");
 		res.end("<p>Connected!</p>");
+		return;
 	}
 	else if (URLPath[1] == "dl") {
 		for (let i in AssetPaths) {
@@ -73,7 +75,7 @@ http.createServer(CertConf, (req, res) => {
 			}
 		}
 
-		console.log("Failed to locate resource for URLPath", URLPath);
+		console.log("Could not find resource for URLPath", URLPath);
 		res.writeHead(404);
 		res.end();
 	}
@@ -82,7 +84,7 @@ http.createServer(CertConf, (req, res) => {
 async function OrchisAssetVer() {
 	return new Promise((resolve, reject) => {
 		let FinalData = "";
-		sslcom.get("https://orchis.cherrymint.live/assetver", (Response) => {
+		https.get("https://orchis.cherrymint.live/assetver", (Response) => {
 			Response.on('data', (chunk) => {
 				FinalData += chunk;
 			});
