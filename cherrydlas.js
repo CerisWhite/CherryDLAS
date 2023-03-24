@@ -50,7 +50,6 @@ http.createServer(CertConf, (req, res) => {
 	if (URLPath[1] == "test") {
 		console.log("Connected!");
 		res.end("<p>Connected!</p>");
-		return;
 	}
 	else if (URLPath[1] == "dl") {
 		for (let i in AssetPaths) {
@@ -60,14 +59,23 @@ http.createServer(CertConf, (req, res) => {
 				if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
 				else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
 				if (!fs.existsSync(FilePath)) { continue; }
+
+				const data = await readFile(FilePath);
 				res.writeHead(200);
-				res.end(fs.readFileSync(FilePath));
+				res.end(data);
 				return;
-			} catch { console.log("An error has occurred."); }
-			res.writeHead(404);
-			res.end("<p>File not found</p>");
-			return;
+
+			} catch (err) {
+				console.error("An error has occurred:", err);
+				res.writeHead(500);
+				res.end();
+				return;
+			}
 		}
+
+		console.log("Failed to locate resource for URLPath", URLPath);
+		res.writeHead(404);
+		res.end();
 	}
 }).listen(ServerPort);
 
