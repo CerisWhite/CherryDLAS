@@ -50,6 +50,7 @@ http.createServer(CertConf, (req, res) => {
 	if (URLPath[1] == "test") {
 		console.log("Connected!");
 		res.end("<p>Connected!</p>");
+		return;
 	}
 	else if (URLPath[1] == "dl") {
 		for (let i in AssetPaths) {
@@ -59,12 +60,13 @@ http.createServer(CertConf, (req, res) => {
 				if (URLPath[2] == "manifests") { FilePath = path.join(AssetPaths[i], URLPath[4], URLPath[5]); }
 				else { FilePath = path.join(AssetPaths[i], URLPath[5], URLPath[6]); }
 				if (!fs.existsSync(FilePath)) { continue; }
-				fs.readFile(FilePath, (err, data) => {
-					res.writeHead(200);
-					res.end(data);
-					return;
-				});
+				res.writeHead(200);
+				res.end(fs.readFileSync(FilePath));
+				return;
 			} catch { console.log("An error has occurred."); }
+			res.writeHead(404);
+			res.end("<p>File not found</p>");
+			return;
 		}
 	}
 }).listen(ServerPort);
