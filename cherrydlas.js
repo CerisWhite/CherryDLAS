@@ -45,6 +45,7 @@ else {
 }
 
 http.createServer(CertConf, (req, res) => {
+	console.log("Got request")
 	const URLPath = req.url.split("/");
 	if (URLPath.includes("..")) { res.writeHead(404); res.end('404: File not found'); return; }
 	if (URLPath[1] == "test") {
@@ -71,7 +72,12 @@ http.createServer(CertConf, (req, res) => {
 				res.writeHead(200);
 				res.end(File);
 				return;
-			} catch { console.log("An error has occurred."); }
+			} catch(err) {
+				console.error("An error occurred while writing the response:", err);
+				res.writeHead(500);
+				res.end();
+				return;
+			}
 		}
 	}
 }).listen(ServerPort);
@@ -87,6 +93,7 @@ async function OrchisAssetVer() {
 				resolve(JSON.parse(FinalData));
 			});
 		}).on('error', (err) => {
+			console.error("Error fetching /assetver:", err)
 			reject("Error: " + err.message);
 		});
 	});
@@ -113,6 +120,7 @@ async function DownloadAsset(TargetURL, TargetPath) {
 			Response.pipe(WriteOut);
 		}).on('error', (err) => {
 			ActiveDownloads -= 1;
+			console.error(`Error downloading asset ${TargetURL}:`, err)
 			reject("Error: " + err.message);
 		});
 	});
