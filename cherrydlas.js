@@ -45,7 +45,6 @@ else {
 }
 
 http.createServer(CertConf, (req, res) => {
-	console.log("Got request")
 	const URLPath = req.url.split("/");
 	if (URLPath.includes("..")) { res.writeHead(404); res.end('404: File not found'); return; }
 	if (URLPath[1] == "test") {
