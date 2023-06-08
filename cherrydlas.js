@@ -4,7 +4,8 @@ const process = require('process');
 const sslcom = require('https');
 let http = require('http');
 
-const OrchisAssetURL = "https://orchis.cherrymint.live/dl"
+const URLRegex = /\.\.|\\/g;
+const OrchisAssetURL = "https://orchis.cherrymint.live/dl";
 const BasePath = path.join(process.cwd(), "orchis");
 if (!fs.existsSync(BasePath)) {
 	fs.mkdirSync(BasePath);
@@ -45,8 +46,8 @@ else {
 }
 
 http.createServer(CertConf, (req, res) => {
+	if (req.url.match(URLRegex)) { res.writeHead(404); res.end('404: File not found'); return; }
 	const URLPath = req.url.split("/");
-	if (URLPath.includes("..")) { res.writeHead(404); res.end('404: File not found'); return; }
 	if (URLPath[1] == "test") {
 		console.log("Connected!");
 		res.end("<p>Connected!</p>");
