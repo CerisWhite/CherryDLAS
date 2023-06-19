@@ -93,8 +93,7 @@ async function OrchisAssetVer() {
 				resolve(JSON.parse(FinalData));
 			});
 		}).on('error', (err) => {
-			console.error("Error fetching /assetver:", err)
-			reject("Error: " + err.message);
+			console.error("Error fetching /assetver");
 		});
 	});
 }
@@ -120,8 +119,7 @@ async function DownloadAsset(TargetURL, TargetPath) {
 			Response.pipe(WriteOut);
 		}).on('error', (err) => {
 			ActiveDownloads -= 1;
-			console.error(`Error downloading asset ${TargetURL}:`, err)
-			reject("Error: " + err.message);
+			console.error("Error downloading asset " + TargetURL);
 		});
 	});
 }
