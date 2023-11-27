@@ -5,7 +5,7 @@ const sslcom = require('https');
 let http = require('http');
 
 const URLRegex = /\.\.|\\/g;
-const OrchisAssetURL = "https://orchis.cherrymint.live/dl";
+const OrchisAssetURL = "https://minty.sbs/dl";
 const BasePath = path.join(process.cwd(), "orchis");
 if (!fs.existsSync(BasePath)) {
 	fs.mkdirSync(BasePath);
